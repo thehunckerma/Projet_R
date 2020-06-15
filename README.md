@@ -1,16 +1,18 @@
 # Projet_R
 
-## Quel est votre sexe :
+## 1 Quel est votre age => A
+
+## 2 Quel est votre sexe => B
 
 - **Homme** _=>_ 1
 - **Femme** _=>_ 2
 
-## Quel est votre niveau d'étude :
+## 3 Quel est votre niveau d'étude => C
 
 - **1ère année** _=>_ 1
 - **N ème année** _=>_ N
 
-## Quelle est votre école / faculté :
+## 4 Quelle est votre école / faculté => D
 
 - **ENSA Kénitra** _=>_ 1
 - **ENCG Kénitra** _=>_ 2
@@ -21,12 +23,14 @@
 - **ESEF UIT** _=>_ 7
 - **Hors Univérsité Ibn Tofail** _=>_ 8
 
-## Est-ce que vous suivez/avez suivi des cours à distance :
+## 5 Est-ce que vous suivez/avez suivi des cours à distance => E
 
 - **Oui** _=>_ 1
 - **Non** _=>_ 2
 
-## Quelle plateforme utilisez-vous | Quelle est votre plateforme préférée :
+## 6 Quelle plateforme utilisez-vous => F
+
+## 7 Quelle est votre plateforme préférée => H
 
 - **Google Classroom** _=>_ 1
 - **Moodle** _=>_ 2
@@ -34,7 +38,7 @@
 - **Zoom** _=>_ 4
 - **Microsoft Team** _=>_ 5
 
-## Quels appareils utilisez-vous :
+## 8 Quels appareils utilisez-vous => G
 
 - **Ordinateur bureau** _=>_ 1
 - **Ordinateur portable** _=>_ 2
@@ -43,11 +47,11 @@
 
 ## Quels sont les problèmes techniques auxquels vous faites face :
 
-1. ### Perte de connexion ou débit faible
-2. ### Manipulation des plateformes
-3. ### Coupure d'électricité
-4. ### blocage de l'ordinateur
-5. ### Indisponibilité des appareils
+1. ### 9 Perte de connexion ou débit faible => I1
+2. ### 10 Manipulation des plateformes => I2
+3. ### 11 Coupure d'électricité => I3
+4. ### 12 blocage de l'ordinateur => I4
+5. ### 13 Indisponibilité des appareils => I5
 
 - **Toujours** _=>_ 1
 - **Fréquement** _=>_ 2
@@ -55,7 +59,7 @@
 - **Rarement** _=>_ 4
 - **Jamais** _=>_ 5
 
-## Combien de séance vous étudiez par semaine :
+## 14 Combien de séance vous étudiez par semaine => J
 
 - **moins 5 séances/semaine** _=>_ 1
 - **5 séances/semaine** _=>_ 2
@@ -64,10 +68,10 @@
 
 ## Durant l'enseignement à distance :
 
-1. ### Les devoirs sont devenus nombreux
-2. ### Les cours sont plus difficile à suvire
-3. ### Les cours vous posent sur la bonne voie pour s'approfondir
-4. ### Vous assimilez les cours
+1. ### 15 Les devoirs sont devenus nombreux => K1
+2. ### 16 Les cours sont plus difficile à suvire => K2
+3. ### 17 Les cours vous posent sur la bonne voie pour s'approfondir => K3
+4. ### 18 Vous assimilez les cours => K4
 
 - **Tout à fait d'accord** _=>_ 1
 - **D'accord** _=>_ 2
@@ -77,10 +81,10 @@
 
 ## Les cours sont plus sous forme de :
 
-1. ### Cours interactive
-2. ### Visioconférence
-3. ### Cours PDF/PPT téléchargeable
-4. ### Vidéo téléchargeable
+1. ### 19 Cours interactive => M1
+2. ### 20 Visioconférence => M2
+3. ### 21 Cours PDF/PPT téléchargeable => M3
+4. ### 22 Vidéo téléchargeable => M4
 
 - **Toujours** _=>_ 1
 - **Fréquement** _=>_ 2
@@ -88,15 +92,28 @@
 - **Rarement** _=>_ 4
 - **Jamais** _=>_ 5
 
+## Qu'est ce que vous-préférez le plus :
+
+1. ### 23 Cours interactive => O1
+2. ### 24 Visioconférence => O2
+3. ### 25 Cours PDF/PPT téléchargeable => O3
+4. ### 26 Vidéo téléchargeable => O4
+
+- **Pas du tout** _=>_ 1
+- **Peu** _=>_ 2
+- **Indifférent** _=>_ 3
+- **Beaucoup** _=>_ 4
+- **Intensément** _=>_ 5
+
 ## Qu'est ce que vous pensez des affirmations suivantes :
 
-1. ### Les enseignants sont bien formés pour assurer des cours à distance
-2. ### Les enseignants respectent les horaires
-3. ### Les élèves respectent les horaires
-4. ### Les enseignants s'assurent de l'assiduité des élèves
-5. ### Vous avez une excellente assiduité durant les cours à distance
-6. ### Vous gérer bien votre temps
-7. ### Vous dormez plus
+1. ### 27 Les enseignants sont bien formés pour assurer des cours à distance => P1
+2. ### 28 Les enseignants respectent les horaires => P2
+3. ### 29 Les élèves respectent les horaires => P3
+4. ### 30 Les enseignants s'assurent de l'assiduité des élèves => P4
+5. ### 31 Vous avez une excellente assiduité durant les cours à distance => P5
+6. ### 32 Vous gérer bien votre temps => P6
+7. ### 33 Vous dormez plus => P7
 
 - **Tout à fait d'accord** _=>_ 1
 - **D'accord** _=>_ 2
@@ -106,9 +123,9 @@
 
 ## Les enseignants s'assurent de l'assiduité des élèves à l'aide :
 
-1. ### Des quiz
-2. ### D'appel
-3. ### Des questions durant le cours
+1. ### 34 Des quiz => Q1
+2. ### 35 D'appel => Q2
+3. ### 36 Des questions durant le cours => Q3
 
 - **Toujours** _=>_ 1
 - **Fréquement** _=>_ 2
@@ -118,14 +135,14 @@
 
 ## Comment vous impacte cette situation actuelle :
 
-1. ### Productivité
-2. ### Innovation
-3. ### Créativité
-4. ### Stress
-5. ### Anxiété
-6. ### Ennui
-7. ### Dépression
-8. ### Concentration
+1. ### 37 Productivité => R1
+2. ### 38 Innovation => R2
+3. ### 39 Créativité => R3
+4. ### 40 Stress => R4
+5. ### 41 Anxiété => R5
+6. ### 42 Ennui => R6
+7. ### 43 Dépression => R7
+8. ### 44 Concentration => R8
 
 - **Très mal** _=>_ 1
 - **Mal** _=>_ 2
@@ -135,13 +152,13 @@
 
 ## Préférez-vous les examens :
 
-1. ### À distance
-2. ### En présentiel
-3. ### Questions ouvertes
-4. ### Questions à choix multiple
-5. ### Projet
-6. ### Excercices
-7. ### Evaluation orale (à distance)
+1. ### 45 À distance => S1
+2. ### 46 En présentiel => S2
+3. ### 47 Questions ouvertes => S3
+4. ### 48 Questions à choix multiple => S4
+5. ### 49 Projet => S5
+6. ### 50 Excercices => S6
+7. ### 51 Evaluation orale (à distance) => S7
 
 - **Pas du tout** _=>_ 1
 - **Peu** _=>_ 2
@@ -149,7 +166,7 @@
 - **Beaucoup** _=>_ 4
 - **Intensément** _=>_ 5
 
-## Comment cette situation peut affecter votre classement pour le choix de filière, mobilité ou double diplomation :
+## 52 Comment cette situation peut affecter votre classement pour le choix de filière, mobilité ou double diplomation => N
 
 - **très négativement** _=>_ 1
 - **négativement** _=>_ 2
@@ -159,8 +176,8 @@
 
 ## Qu'est ce que vous préférez :
 
-1. ### Sous les conditions actuelles
-2. ### Après amélioration des conditions de l'enseignement à distance
+1. ### 53 Sous les conditions actuelles => L1
+2. ### 54 Après amélioration des conditions de l'enseignement à distance => L2
 
 - **Cours présentiels** _=>_ 1
 - **Cours à distance** _=>_ 2
