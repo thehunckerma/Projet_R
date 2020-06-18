@@ -3,7 +3,7 @@
 \pard\sa200\sl240\slmult1\f0\fs22\lang9\par
 
 \pard\sa200\sl276\slmult1\par
-To identify outliers we are using the R package 'mvoutlier' which relies on ordered robust mahalanobis distances, it measures the mahalanobis distances and then classifies the points as outliers based on a chi-2 distribution.\par
+To identify outliers we are using the R package mvoutlier which relies on ordered robust mahalanobis distances, it measures the mahalanobis distances and then classifies the points as outliers based on a chi-2 distribution.\par
 The Mahalanobis distance:\par
 {\pict{\*\picprop}\wmetafile8\picw12965\pich4842\picwgoal4245\pichgoal1575 
 01000900000324b200000000fbb1000000000400000003010800050000000b0200000000050000
@@ -2347,7 +2347,7 @@ bababa000606060095959500262626001c1c1c0059595900363636002b2b2b00f4f4f400898989
 010101010101010101010000040000002701ffff030000000000
 }\par
 With S = Covariance matrix of independant variables.\par
-We are using the function 'color.plot' from the package, it plots  data using different symbols according to the robust mahalanobis distance based on the minimum covariance determinant estimator with adjustment and using different colors according to the euclidean distances of the observations:\par
+We are using the function color.plot from the package, it plots  data using different symbols according to the robust mahalanobis distance based on the minimum covariance determinant estimator with adjustment and using different colors according to the euclidean distances of the observations.\par
 
 \pard\sa200\sl240\slmult1\qc{\pict{\*\picprop}\wmetafile8\picw15822\pich12912\picwgoal8310\pichgoal6780 
 0100090000032a3e02000000013e020000000400000003010800050000000b0200000000050000
@@ -9890,6 +9890,10 @@ ff000033ff000033003300ffcc0000ff660000ffff0000ff003300ff0000006600330033006600
 010101010101010101010101010000040000002701ffff030000000000
 }\par
 
-\pard\sa200\sl276\slmult1 The blue represents small distances, and red represents large distances from the data set minimum\par
+\pard\sa200\sl276\slmult1 The blue represents small euclidean distances.\par
+The red represents large euclidean distances.\par
+Mahalanobis distances are represented by their symbol.\par
+The four ellipsoids are constant mahalanobis distances corresponding to 25%, 50%, 75%, and the adjusted quantiles of the chi-square distribution.\par
+As we can see there are 8 points qualified as outliers, which is 6.88% of the data, therefore removing them is acceptable.\par
 }
  

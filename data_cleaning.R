@@ -1,15 +1,14 @@
 source("helpers.R")
 
-packages <- c(
+packages <- c( # List of this script's dependencies
   "readxl",
   "writexl",
   "mvoutlier"
-) # List of this script's dependencies
+)
 
 RequirePackages(packages) # if package is installed import it else install it and import it
 
-path <- "X:/R/Projet_R/dataset_clean_1.xlsx" # Dataset path
-initial_dataset <- read_excel(path) # Import the initial dataset
+initial_dataset <- read_excel("data/dataset.xlsx") # Import the initial dataset
 
 # Column Splitting --------------------------------------------------------------------
 
@@ -53,15 +52,14 @@ age_year <- data.frame(dataset$A, dataset$C) # Dataframe of Age and Year
 
 outliers <- color.plot(
   age_year,
-  quan = 0.5,
-  alpha = 0.05,
+  quan = 0.5
 )$outliers # Plot the euclidean distance as a color and return a boolean vector of outliers
 
-print(age_year[unlist(outliers),]) # Print the outliers
+print(age_year[unlist(outliers), ]) # Print the outliers
 
-dataset <- dataset[unlist(!outliers),] # Filter the outliers from the dataset
+dataset <- dataset[unlist(!outliers), ] # Filter the outliers from the dataset
 
-write_xlsx(dataset, "dataset_clean_2.xlsx") # Export the dataset for later use
+write_xlsx(dataset, "data/dataset_clean.xlsx") # Export the dataset for later use
 
 # Splitting dataset -------------------------------------------------------------
 
@@ -70,9 +68,8 @@ write_xlsx(dataset, "dataset_clean_2.xlsx") # Export the dataset for later use
 
 # Exclude the E column as it becomes useless after the split
 df1 <- select(dataset[dataset$E == 1, ], -E)
-write_xlsx(df1, "dataset_1.xlsx") # Export the dataset for later use
+write_xlsx(df1, "data/dataset_clean_1.xlsx") # Export the dataset for later use
 
 # Exclude all the columns except A, B, C, D because they contain NA values
 df2 <- as.data.frame(dataset[dataset$E == 2, 1:4])
-write_xlsx(df2, "dataset_2.xlsx") # Export the dataset for later use
-
+write_xlsx(df2, "data/dataset_clean_2.xlsx") # Export the dataset for later use
