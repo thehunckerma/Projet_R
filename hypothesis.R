@@ -55,13 +55,3 @@ alphaCronbach=cronbach(tbl[,1:length(tbl)]) #applying the Conbach alpha test on 
 #applying the mokken scaling, Conbach alpha test, the Guttman's lambda test, on the dataframe to check data reliability
 check.reliability(as.data.frame(df1), MS = TRUE, alpha = TRUE, lambda.2 = TRUE, LCRC = FALSE, nclass = nclass.default, irc = FALSE)
 
-
-
-
-
-# #hypothese: l'appel impacte l'assiduité
-# chi2CramereV(Q2,P5)
-# #hypothese: Les Qs durants le cours impacte l'assurance desprofs de l'assiduité des eleves
-# chi2CramereV(Q3,P4)
-# #hypothese: Les Qs durants le cours impacte l'assiduité
-# chi2CramereV(Q3,P5)
