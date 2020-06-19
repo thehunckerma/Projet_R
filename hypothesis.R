@@ -6,6 +6,7 @@ packages <- c( # List of this script's dependencies
   "rlist",
   "psy",
   "data.table",
+  "DescTools",
   "mokken"
 )
 RequirePackages(packages)
