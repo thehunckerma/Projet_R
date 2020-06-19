@@ -23,6 +23,10 @@ attach(df1)
 CramerV= function(x){
     cramer.v(table(factor(x[[1]],ordered=TRUE),factor(x[[2]],ordered=TRUE)))^2
 }
+PearsonKhi2= function(x){
+    coningencyTable=table(factor(x[[1]],ordered=TRUE),factor(x[[2]],ordered=TRUE))
+    chisq.test(coningencyTable)
+}
 
 a=list(
   list(I1,P5),
@@ -39,6 +43,7 @@ a=list(
   list(A,P5)
 )
 a=lapply(a,CramerV)
+a=lapply(a,PearsonKhi2)
 # #hypothese: nombre de sceance par semaine impacte l'assiduité
 # chi2CramereV(J,P5)
 # #hypothese: nombre de devoir impacte l'assurance desprofs de l'assiduité des eleves
