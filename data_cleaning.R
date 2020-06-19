@@ -3,6 +3,9 @@ source("helpers.R")
 packages <- c( # List of this script's dependencies
   "readxl",
   "writexl",
+  "dplyr",
+  "tidyr",
+  "stringr",
   "mvoutlier"
 )
 
@@ -45,7 +48,8 @@ lapply(initial_dataset$G, function(x) { # For each line assign to each column it
     }
   }
 })
-
+# Numerical conversion -------------------------------------------------------------------
+dataset <- mutate_all(dataset, function(x) as.numeric(as.character(x))) # Convert everything to numeric
 # Multivariate Outlier Detection ---------------------------------------------------------
 
 age_year <- data.frame(dataset$A, dataset$C) # Dataframe of Age and Year
