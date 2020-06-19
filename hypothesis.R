@@ -2,7 +2,7 @@ source("helpers.R")
 
 packages <- c( # List of this script's dependencies
   "readxl",
-  "questionr",
+  "questionr"
 )
 RequirePackages(packages)
 #hypothesis
@@ -24,23 +24,14 @@ c5= c(18,19,20,21,22,23)
 df1 <- read_excel("data/dataset_clean_1.xlsx")
 attach(df1)
 
-chi2CramereV= function(I1,P5,c1,c2){
-    I1=factor(I1,ordered=TRUE)
-    P5=factor(P5,ordered=TRUE)
-    P5I1=table(P5,I1)
-    tab.ind=chisq.test(P5I1)$expected
-    round(tab.ind)
-    (P5I1-tab.ind)^2/tab.ind
-    tab.contre=chisq.test(P5I1)$residuals^2
-    khi2=summary(P5I1)$statistic
-    khi2
-    N=sum(P5I1)
-    p=nrow(P5I1)
-    q=ncol(P5I1)
-    cramer.v(P5I1)^2
+CramerV= function(x,y){
+    cramer.v(table(factor(x,ordered=TRUE),factor(y,ordered=TRUE)))^2
 }
 #hypothese: perte de connection impacte l'assiduité
-chi2CramereV(I1,P5,c1,c2)
+CramerV(I1,P5)
+
+
+
 #hypothese: nombre de sceance par semaine impacte l'assiduité
 chi2CramereV(J,P5,c("moins 5 séances/semaine","5 séances/semaine","entre 6 et 10 séances/semaine"),c2)
 #hypothese: nombre de devoir impacte l'assurance desprofs de l'assiduité des eleves
