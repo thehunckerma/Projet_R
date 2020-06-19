@@ -16,7 +16,7 @@ attach(df1)
 tbl=as.data.table(df1)
 a=list(
   list(I1,P5), #Perte de connexion ou debit faible / l'assiduité
-  list(J,P5), ##nombre de sceance par semaine / l'assurance desprofs de l'assiduité des eleves
+  list(J,P5), #nombre de sceance par semaine / l'assurance desprofs de l'assiduité des eleves
   list(K1,P4), #nombre de devoir / l'assurance desprofs de l'assiduité des eleves
   list(K1,P5), #Les quiz / l'assiduité
   list(Q1,P4), #Les quiz / l'assurance des profs de l'assiduité des eleves
