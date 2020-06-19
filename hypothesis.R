@@ -6,7 +6,7 @@ packages <- c( # List of this script's dependencies
   "rlist"
 )
 RequirePackages(packages)
-#hypothesis
+# hypothesis
 # I1 impacte (-) P5
 # J impacte (-) P5
 # K1 impacte (-) R4 et R5 ?
@@ -21,30 +21,30 @@ RequirePackages(packages)
 df1 <- read_excel("data/dataset_clean_1.xlsx")
 attach(df1)
 
-CramerV= function(x){
-    cramer.v(table(factor(x[[1]],ordered=TRUE),factor(x[[2]],ordered=TRUE)))^2
+CramerV <- function(x) {
+  cramer.v(table(factor(x[[1]], ordered = TRUE), factor(x[[2]], ordered = TRUE)))^2
 }
-PearsonKhi2= function(x){
-    coningencyTable=table(factor(x[[1]],ordered=TRUE),factor(x[[2]],ordered=TRUE))
-    chisq.test(coningencyTable)
+PearsonKhi2 <- function(x) {
+  coningencyTable <- table(factor(x[[1]], ordered = TRUE), factor(x[[2]], ordered = TRUE))
+  chisq.test(coningencyTable)
 }
-a=list(
-  list(I1,P5),
-  list(J,P5),
-  list(K1,P4),
-  list(K1,P5),
-  list(Q1,P4),
-  list(Q1,P5),
-  list(Q2,P4),
-  list(Q2,P5),
-  list(Q3,P4),
-  list(Q3,P5),
-  list(N,R4),
-  list(A,P5)
+a <- list(
+  list(I1, P5),
+  list(J, P5),
+  list(K1, P4),
+  list(K1, P5),
+  list(Q1, P4),
+  list(Q1, P5),
+  list(Q2, P4),
+  list(Q2, P5),
+  list(Q3, P4),
+  list(Q3, P5),
+  list(N, R4),
+  list(A, P5)
 )
-pKhi2=lapply(a,PearsonKhi2)
-depPValue=list.filter(a,PearsonKhi2(a[[.i]])$p.value < 0.05)
-cramer=lapply(depPValue,CramerV)
+pKhi2 <- lapply(a, PearsonKhi2)
+depPValue <- list.filter(a, PearsonKhi2(a[[.i]])$p.value < 0.05)
+cramer <- lapply(depPValue, CramerV)
 # #hypothese: nombre de sceance par semaine impacte l'assiduité
 # chi2CramereV(J,P5)
 # #hypothese: nombre de devoir impacte l'assurance desprofs de l'assiduité des eleves
