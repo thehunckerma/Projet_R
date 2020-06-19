@@ -15,15 +15,12 @@ RequirePackages(packages)
 # N impacte (-) R4
 # A impacte (-) P5
 
-c1= c("Toujours" ,"Fréquement","De temps à l'autre","Rarement","Jamais")
-c2= c("Tout à fait d'accord","Ni d'accord ni pas d'accord","Pas d'accord","Totalement pas d'accord")
-c3= c("Très mal","Pas de différence","Mieux","Beaucoup mieux")
-c4= c("très négativement","négativement","neutre","positivemnt","très positivemnt")
-c5= c(18,19,20,21,22,23)
+
 
 df1 <- read_excel("data/dataset_clean_1.xlsx")
 attach(df1)
 
+<<<<<<< HEAD
 CramerV= function(x,y){
     cramer.v(table(factor(x,ordered=TRUE),factor(y,ordered=TRUE)))^2
 }
@@ -32,25 +29,44 @@ CramerV(I1,P5)
 
 
 
+=======
+chi2CramereV= function(I1,P5){
+    I1=factor(I1,ordered=TRUE)
+    P5=factor(P5,ordered=TRUE)
+    P5I1=table(P5,I1)
+    tab.ind=chisq.test(P5I1)$expected
+    round(tab.ind)
+    (P5I1-tab.ind)^2/tab.ind
+    tab.contre=chisq.test(P5I1)$residuals^2
+    khi2=summary(P5I1)$statistic
+    khi2
+    N=sum(P5I1)
+    p=nrow(P5I1)
+    q=ncol(P5I1)
+    cramer.v(P5I1)^2
+}
+#hypothese: perte de connection impacte l'assiduité
+chi2CramereV(I1,P5)
+>>>>>>> 41f80a53471a8f7c68704db51f5557754905d6d0
 #hypothese: nombre de sceance par semaine impacte l'assiduité
 chi2CramereV(J,P5,c("moins 5 séances/semaine","5 séances/semaine","entre 6 et 10 séances/semaine"),c2)
 #hypothese: nombre de devoir impacte l'assurance desprofs de l'assiduité des eleves
-chi2CramereV(K1,P4,c2,c2)
+chi2CramereV(K1,P4)
 #hypothese: nombre de devoir impacte l'assiduité
-chi2CramereV(K1,P5,c2,c2)
+chi2CramereV(K1,P5)
 #hypothese: Les quiz impacte l'assurance desprofs de l'assiduité des eleves
-chi2CramereV(Q1,P4,c1,c2)
+chi2CramereV(Q1,P4)
 #hypothese: Les quiz impacte l'assiduité
-chi2CramereV(Q1,P5,c1,c2)
+chi2CramereV(Q1,P5)
 #hypothese: l'appel impacte l'assurance desprofs de l'assiduité des eleves
-chi2CramereV(Q2,P4,c1,c2)
+chi2CramereV(Q2,P4)
 #hypothese: l'appel impacte l'assiduité
-chi2CramereV(Q2,P5,c1,c2)
+chi2CramereV(Q2,P5)
 #hypothese: Les Qs durants le cours impacte l'assurance desprofs de l'assiduité des eleves
-chi2CramereV(Q3,P4,c1,c2)
+chi2CramereV(Q3,P4)
 #hypothese: Les Qs durants le cours impacte l'assiduité
-chi2CramereV(Q3,P5,c1,c2)
+chi2CramereV(Q3,P5)
 #hypothese: nombre de sceance par semaine impacte le stress
-chi2CramereV(N,R4,c4,c3)
+chi2CramereV(N,R4)
 #hypothese: l'age impacte l'assiduité
-chi2CramereV(A,P5,c5,c2)
+chi2CramereV(A,P5)
