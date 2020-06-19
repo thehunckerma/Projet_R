@@ -2,7 +2,8 @@ source("helpers.R")
 
 packages <- c( # List of this script's dependencies
   "readxl",
-  "questionr"
+  "questionr",
+  "rlist"
 )
 RequirePackages(packages)
 #hypothesis
@@ -27,7 +28,6 @@ PearsonKhi2= function(x){
     coningencyTable=table(factor(x[[1]],ordered=TRUE),factor(x[[2]],ordered=TRUE))
     chisq.test(coningencyTable)
 }
-
 a=list(
   list(I1,P5),
   list(J,P5),
@@ -42,8 +42,9 @@ a=list(
   list(N,R4),
   list(A,P5)
 )
-a=lapply(a,CramerV)
-a=lapply(a,PearsonKhi2)
+pKhi2=lapply(a,PearsonKhi2)
+depPValue=list.filter(a,PearsonKhi2(a[[.i]])$p.value < 0.05)
+cramer=lapply(depPValue,CramerV)
 # #hypothese: nombre de sceance par semaine impacte l'assiduité
 # chi2CramereV(J,P5)
 # #hypothese: nombre de devoir impacte l'assurance desprofs de l'assiduité des eleves
