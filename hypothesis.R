@@ -18,7 +18,10 @@ df1 <- read_excel("data/dataset_clean_1.xlsx")
 kendallTauB <- function(x) {
   KendallTauB(table(factor(x[[1]], ordered = TRUE), factor(x[[2]], ordered = TRUE)), conf.level = 0.95)
 }
-
+verbosity <- list(
+  chi2 = FALSE,
+  cramerv = FALSE
+) # Wether or not to print the tests results in the console
 df1_colnames <- colnames(df1) # List of dataframe column names
 counter_ <- 0 # Counts the number Chi-square tests with p-value < 0.05
 counter <- 0 # Counts the total number of the Chi-square tests
@@ -28,7 +31,7 @@ chi2_df <- data.frame(
   name1 = character(),
   name2 = character(),
   p_value = numeric()
-) # Dataframe that stores data about the variables that got a p-value < 0.05
+) # Initialize the dataframe that stores data about the variables that got a p-value < 0.05
 
 # Perform Chi-square test on every pair of variables from the dataframe
 for (row in 1:ncol(df1)) {
@@ -67,7 +70,7 @@ for (row in 1:ncol(df1)) {
 print(paste("There are", counter_, "correlations out of", counter))
 View(chi2_df)
 
-# Dataframes that stores data about the variables depending on their cramer's v coeff value
+# Initialize the dataframes that stores data about the variables depending on their cramer's v coeff value
 cramerv_df_low <- data.frame(
   row1 = numeric(),
   row2 = numeric(),
