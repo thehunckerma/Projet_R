@@ -53,6 +53,6 @@ kendallTB=lapply(depPValue,kendallTauB) #applying kendallTB test to the remainin
 
 alphaCronbach=cronbach(tbl[,1:length(tbl)]) #applying the Conbach alpha test on the dataframe (as a data table) to check data reliability based on the alpha value
 
-#applying the mokken scaling, Conbach alpha test, the Guttman's lambda test, on the dataframe to check data reliability
-check.reliability(as.data.frame(df1), MS = TRUE, alpha = TRUE, lambda.2 = TRUE, LCRC = FALSE, nclass = nclass.default, irc = FALSE)
+# applying the mokken scaling, Conbach alpha test, the Guttman's lambda test, on the dataframe to check data reliability
+# check.reliability(as.data.frame(df1), MS = TRUE, alpha = TRUE, lambda.2 = TRUE, LCRC = FALSE, nclass = nclass.default, irc = FALSE)
 
