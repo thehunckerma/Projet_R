@@ -15,11 +15,6 @@ RequirePackages(packages)
 
 df1 <- read_excel("data/dataset_clean_1.xlsx")
 
-
-# definition of test functions
-CramerV <- function(x) {
-
-}
 kendallTauB <- function(x) {
   KendallTauB(table(factor(x[[1]], ordered = TRUE), factor(x[[2]], ordered = TRUE)), conf.level = 0.95)
 }
