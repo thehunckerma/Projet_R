@@ -1,4 +1,9 @@
+source("hypothesis.R")
+
+df1 <- read_excel("data/dataset_clean_1.xlsx")
 attach(df1)
+
+df1[]=lapply(df1[],function(x) factor(x,ordered=TRUE))
 tbl=as.data.table(df1)
 a=list(
   list(I1,P5), #Perte de connexion ou debit faible / l'assiduité

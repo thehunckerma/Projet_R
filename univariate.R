@@ -6,7 +6,6 @@ packages <- c( # List of this script's dependencies
   "moments"
 )
 RequirePackages(packages) # if package is installed import it else install it and import it
-
 dataset <- read_excel("data/dataset_clean.xlsx") # Import the dataset
 attach(dataset)
 dataset1 <- read_excel("data/dataset_clean_1.xlsx") # Import the dataset
