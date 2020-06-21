@@ -10,13 +10,20 @@ RequirePackages(packages) # if package is installed import it else install it an
 dataset <- read_excel("data/dataset_clean.xlsx") # Import the dataset
 attach(dataset)
 
-#Max, min, mediane, mean, 1st and 3rd quantils
+#Max, min, mediane, mean, 1st and 3rd quantils, variace, square distance, kurtosis, skewness, frequences
 summary(A)
-kurtosis(A)
+var(A)
+sd(A)
+kurtosis(A) # 
 skewness(A)
+table(A)
+hist(A)
+shapiro.test(A) 
 
 #frequence
-a=lapply(colnames(dataset[,2:lenght(dataset)]),function(x)  table(dataset[x]))
+frequence=lapply(colnames(dataset[,2:length(dataset)]),function(x)  table(dataset[x]))
+names(frequence)=
+
 
 hist.data.frame(dataset[,1:5])
 hist.data.frame(dataset[,15:26])
