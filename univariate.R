@@ -24,7 +24,7 @@ var(dataset$A)
 sd(dataset$A)
 kurtosis(dataset$A)
 skewness(dataset$A)
-histos[1]
+suppressWarnings(histos[1])
 shapiro.test(dataset$A) 
 
 p_OnlineCourses = nrow(dataset1)/nrow(dataset) # Ratio of people who had online courses 
@@ -35,16 +35,40 @@ frequence=sapply(colnames(dataset[,2:length(dataset)]),function(x){table(dataset
 # Pourcentage
 pourcentage=sapply(lapply(frequence,"*",100),"/",nrow(dataset))
 
+d_ordinal <- dataset1[!(names(dataset1) %in% c( # Ordinal variables ( Likert Scale )
+  "A",
+  "B",
+  "C",
+  "D",
+  "H",
+  "J",
+  "L1",
+  "L2",
+  "F1",
+  "F2",
+  "F3",
+  "F4",
+  "F5",
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+))]
+normalityTest=apply(d_ordinal,2,shapiro.test)
+normalVarCount=length(list.filter(normalityTest,normalityTest[[.i]]$p.value > 0.05))
+cat("in ", length(d_ordinal), " variables, there are ", normalVarCount," with no difference between their evolution and the normal distribution")
+
 T=names(dataset)
 T=set_names(x)
-hist_fun = function(x) {
-      ggplot(dataset, aes(x = .data[[x]]) ) + geom_histogram(color="darkblue",fill="white")
-}
-histos=lapply(T,hist_fun)
-
-do.call(grid.arrange, histos[2:11])
-do.call(grid.arrange, histos[12:21])
-do.call(grid.arrange, histos[22:31])
-do.call(grid.arrange, histos[32:41])
-do.call(grid.arrange, histos[42:51])
-do.call(grid.arrange, histos[52:60])
+histos=c(lapply(T[2:5],function(x) {
+      ggplot(dataset[2:5], aes(x = .data[[x]]) ) + geom_histogram(color="darkblue",fill="white",binwidth = NULL)
+}),
+lapply(T[6:length(dataset)],function(x) {
+      ggplot(dataset1[5:length(dataset1)], aes(x = .data[[x]]) ) + geom_histogram(color="darkblue",fill="white",binwidth = NULL)
+}))
+suppressWarnings(do.call(grid.arrange, histos[2:11]))
+suppressWarnings(do.call(grid.arrange, histos[12:21]))
+suppressWarnings(do.call(grid.arrange, histos[22:31]))
+suppressWarnings(do.call(grid.arrange, histos[32:41]))
+suppressWarnings(do.call(grid.arrange, histos[42:51]))
+suppressWarnings(do.call(grid.arrange, histos[52:60]))
