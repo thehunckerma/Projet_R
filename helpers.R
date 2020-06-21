@@ -72,6 +72,6 @@ map <- list(
   S6 = "la preference des examens sous forme d'exercices",
   S7 = "la preference des examens sous forme d'evaluation orale",
   N = "L'impacte de l'enseignement a distance durant le confinement sur le classement/mobilite/double diplomation",
-  L1 = "la preference des cours en presentiel/distance sous les conditions actuelles",
-  L2 = "la preference des cours en presentiel/distance apres amelioration des conditions"
+  L1 = "la preference des cours en presentiel par rapport aux cours a distance sous les conditions actuelles",
+  L2 = "la preference des cours en presentiel par rapport aux cours a distance apres amelioration des conditions"
 )

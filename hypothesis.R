@@ -11,40 +11,175 @@ packages <- c( # List of this script's dependencies
 )
 RequirePackages(packages)
 
-df1 <- read_excel("data/dataset_clean_1.xlsx")
+d <- suppressWarnings(read_excel("data/dataset_clean_1.xlsx"))
+d_colnames <- colnames(d) # List of dataframe column names
 
 verbosity <- list(
+  continuous_ordinal = TRUE,
+  continuous_dichotomous= TRUE,
   chi2 = FALSE,
   cramerv = FALSE
 ) # Wether or not to print the tests results in the console
 
-df1_colnames <- colnames(df1) # List of dataframe column names
+# Split data by variable type --------------------------------------------------------
+
+Age <- d$A # The age is the only continuous variable
+d_dichotomous <- cbind( # Dichotomic variables ( yes/no questions )
+  B = d$B,
+  d[, 5:13], # F and G
+  L1 = d$L1,
+  L2 = d$L2
+)
+d_nominal <- cbind( # Nominal variables ( unordered )
+  C = d$C,
+  D = d$D,
+  H = d$H,
+  J = d$J
+)
+d_ordinal <- d[, !(names(d) %in% c( # Ordinal variables ( Likert Scale )
+  "B",
+  "C",
+  "D",
+  "H",
+  "J",
+  "L1",
+  "L2",
+  "F1",
+  "F2",
+  "F3",
+  "F4",
+  "F5",
+  "G1",
+  "G2",
+  "G3",
+  "G4"
+))]
+
+# Experimental -----------------------------------------------------------------------
+
+# Continuous-ordinal --------------------------------------------
+
+continuous_ordinal_df <- data.frame(
+  col1 = numeric(),
+  col2 = numeric(),
+  name1 = character(),
+  name2 = character(),
+  p_value = numeric(),
+  tau_b = numeric()
+) # Initialize the dataframe that stores data (including Tau-b) variables that got a p-value < 0.05
+
+colnames_ordinal <- colnames(d_ordinal)
+
+for (col in 1:ncol(d_ordinal)) {
+  # Convert to ordinal variable
+
+  x <- d[col] %>%
+    as.matrix() %>%
+    as.table() %>%
+    factor() # Convert each row to factor
+
+  x_ordered <- d[col] %>%
+    as.matrix() %>%
+    as.table() %>%
+    factor(ordered = TRUE, levels = c(1, 2, 3, 4, 5)) # Convert each row to an ordered factor with 5 levels
+
+  p_value <- chisq.test(table(Age, x), simulate.p.value = TRUE)$p.value # Chi-square test to filter the uncorrelated variables
+  tau_b <- KendallTauB(table(Age, x_ordered), conf.level = 0.95)["tau_b"] # Kendall's Tau-b coeff to measure the direction and strength of the association
+
+  if (p_value <= 0.05 && !is.nan(tau_b)) { # Check if the null hypothesis is true
+    if (verbosity["continuous_ordinal"] == TRUE) { # Verbosity
+      if (tau_b > 0) {
+        sign <- "positive"
+      } else {
+        sign <- "negative"
+      }
+      cat(
+        "There is a", sign, "correlation between",
+        d_colnames[1], "and", colnames_ordinal[col], "\n",
+        "p-value =", p_value, "tau-b =", tau_b, "\n\n"
+      )
+    }
+    continuous_ordinal_df <- rbind(continuous_ordinal_df, list(
+      col1 = 1,
+      col2 = col,
+      name1 = d_colnames[1],
+      name2 = colnames_ordinal[col],
+      p_value = p_value,
+      tau_b = tau_b
+    )) # Store the information in the dataframe
+  }
+}
+
+# Continuous-dichotomous  --------------------------------------------
+
+continuous_dichotomous_df <- data.frame(
+  col1 = numeric(),
+  col2 = numeric(),
+  name1 = character(),
+  name2 = character(),
+  p_value = numeric()
+) # Initialize the dataframe that stores data (including Tau-b) variables that got a p-value < 0.05
+
+colnames_ordinal <- colnames(d_dichotomous)
+
+for (col in 1:ncol(d_ordinal)) {
+  # Convert to ordinal variable
+
+  x <- d[col] %>%
+    as.matrix() %>%
+    as.table() %>%
+    factor() # Convert each row to factor
+
+  p_value <- chisq.test(table(Age, x), simulate.p.value = TRUE)$p.value # Chi-square test to filter the uncorrelated variables
+
+  if (p_value <= 0.05) { # Check if the null hypothesis is true
+    if (verbosity["continuous_dichotomous"] == TRUE) { # Verbosity
+      cat(
+        "There is a correlation between",
+        d_colnames[1], "and", colnames_ordinal[col], "\n",
+        "p-value =", p_value, "\n\n"
+      )
+    }
+    continuous_dichotomous_df <- rbind(continuous_dichotomous_df, list(
+      col1 = 1,
+      col2 = col,
+      name1 = d_colnames[1],
+      name2 = colnames_ordinal[col],
+      p_value = p_value
+    )) # Store the information in the dataframe
+  }
+}
+
+
+
+# End of Eperimental ------------------------------------------------------------
+
 counter_ <- 0 # Counts the number Chi-square tests with p-value < 0.05
 counter <- 0 # Counts the total number of the Chi-square tests
 chi2_df <- data.frame(
-  row1 = numeric(),
-  row2 = numeric(),
+  col1 = numeric(),
+  col2 = numeric(),
   name1 = character(),
   name2 = character(),
   p_value = numeric()
 ) # Initialize the dataframe that stores data about the variables that got a p-value < 0.05
 
 # Perform Chi-square test on every pair of variables from the dataframe
-for (row in 1:ncol(df1)) {
-  for (row_ in row:ncol(df1)) {
+for (col in 1:ncol(d)) {
+  for (col_ in col:ncol(d)) {
     # Convert to ordinal variable
-    x <- df1[row] %>%
+    x <- d[col] %>%
       as.matrix() %>%
       as.table() %>%
       factor()
-    y <- df1[row_] %>%
+    y <- d[col_] %>%
       as.matrix() %>%
       as.table() %>%
       factor()
 
     if (
       length(summary(x)) < 2 # Chi-square requires the contingency table to be 2x2
-      | row == row_
+      | col == col_
     ) {
       next
     }
@@ -53,15 +188,15 @@ for (row in 1:ncol(df1)) {
 
     if (p_value <= 0.05) {
       if (verbosity["chi2"] == TRUE) { # Verbosity
-        cat("There is a correlation between", df1_colnames[row], "and", df1_colnames[row_])
+        cat("There is a correlation between", d_colnames[col], "and", d_colnames[col_])
         writeLines("p-value =", p_value, "\n")
       }
 
       chi2_df <- rbind(chi2_df, list(
-        row1 = row,
-        row2 = row_,
-        name1 = df1_colnames[row],
-        name2 = df1_colnames[row_],
+        col1 = col,
+        col2 = col_,
+        name1 = d_colnames[col],
+        name2 = d_colnames[col_],
         p_value = p_value
       )) # Store the information in the dataframe for later use
 
@@ -80,24 +215,24 @@ if (verbosity["chi2"] == TRUE) { # Verbosity
 
 # Initialize the dataframes that store data about the variables based on their cramer's v coeff value
 cramerv_df_low <- data.frame(
-  row1 = numeric(),
-  row2 = numeric(),
+  col1 = numeric(),
+  col2 = numeric(),
   name1 = character(),
   name2 = character(),
   p_value = numeric(),
   cramer_v = numeric()
 )
 cramerv_df_moderate <- data.frame(
-  row1 = numeric(),
-  row2 = numeric(),
+  col1 = numeric(),
+  col2 = numeric(),
   name1 = character(),
   name2 = character(),
   p_value = numeric(),
   cramer_v = numeric()
 )
 cramerv_df_high <- data.frame(
-  row1 = numeric(),
-  row2 = numeric(),
+  col1 = numeric(),
+  col2 = numeric(),
   name1 = character(),
   name2 = character(),
   p_value = numeric(),
@@ -111,17 +246,17 @@ cramerv_df_high <- data.frame(
 # 0 to .1 little if any association
 
 for (row in 1:nrow(chi2_df)) {
-  r <- chi2_df$row1[row]
-  r_ <- chi2_df$row2[row]
+  col1 <- chi2_df$col1[row]
+  col2 <- chi2_df$col2[row]
   name1 <- chi2_df$name1[row]
   name2 <- chi2_df$name2[row]
   p_value <- chi2_df$p_value[row]
 
-  x <- df1[r] %>%
+  x <- d[col1] %>%
     as.matrix() %>%
     as.table() %>%
     factor()
-  y <- df1[r_] %>%
+  y <- d[col2] %>%
     as.matrix() %>%
     as.table() %>%
     factor()
@@ -133,11 +268,11 @@ for (row in 1:nrow(chi2_df)) {
   # Seperate the data depending on the coefficient's value
   if (cramer_v >= 0.5) {
     if (verbosity["cramerv"] == TRUE) { # Verbosity
-      cat("There is a high correlation between", df1_colnames[r], "and", df1_colnames[r_])
+      cat("There is a high correlation between", d_colnames[r], "and", d_colnames[r_])
     }
     cramerv_df_high <- rbind(cramerv_df_high, list(
-      row1 = r,
-      row2 = r_,
+      col1 = col1,
+      col2 = col2,
       name1 = name1,
       name2 = name2,
       p_value = p_value,
@@ -145,11 +280,11 @@ for (row in 1:nrow(chi2_df)) {
     )) # Store the information in the dataframe for later use
   } else if (cramer_v >= 0.3 & cramer_v < 0.5) {
     if (verbosity["cramerv"] == TRUE) { # Verbosity
-      cat("There is a moderate correlation between", df1_colnames[r], "and", df1_colnames[r_])
+      cat("There is a moderate correlation between", d_colnames[r], "and", d_colnames[r_])
     }
     cramerv_df_moderate <- rbind(cramerv_df_moderate, list(
-      row1 = r,
-      row2 = r_,
+      col1 = col1,
+      col2 = col2,
       name1 = name1,
       name2 = name2,
       p_value = p_value,
@@ -157,11 +292,11 @@ for (row in 1:nrow(chi2_df)) {
     )) # Store the information in the dataframe for later use
   } else if (cramer_v >= 0.1 & cramer_v < 0.3) {
     if (verbosity["cramerv"] == TRUE) { # Verbosity
-      cat("There is a low correlation between", df1_colnames[r], "and", df1_colnames[r_])
+      cat("There is a low correlation between", d_colnames[r], "and", d_colnames[r_])
     }
     cramerv_df_low <- rbind(cramerv_df_low, list(
-      row1 = r,
-      row2 = r_,
+      col1 = col1,
+      col2 = col2,
       name1 = name1,
       name2 = name2,
       p_value = p_value,
@@ -185,8 +320,8 @@ for (row in 1:nrow(cramerv_df_moderate)) {
 }
 
 tauB_moderate <- data.frame(
-  row1 = numeric(),
-  row2 = numeric(),
+  col1 = numeric(),
+  col2 = numeric(),
   name1 = character(),
   name2 = character(),
   p_value = numeric(),
@@ -194,26 +329,26 @@ tauB_moderate <- data.frame(
   tauB = numeric()
 )
 for (row in 1:nrow(cramerv_df_moderate)) {
-  r <- cramerv_df_moderate$row1[row]
-  r_ <- cramerv_df_moderate$row2[row]
+  col1 <- cramerv_df_moderate$col1[row]
+  col2 <- cramerv_df_moderate$col2[row]
   name1 <- cramerv_df_moderate$name1[row]
   name2 <- cramerv_df_moderate$name2[row]
   p_value <- cramerv_df_moderate$p_value[row]
   cramer_v <- cramerv_df_moderate$cramer_v[row]
-  
-  x <- df1[r] %>%
+
+  x <- d[col1] %>%
     as.matrix() %>%
     as.table() %>%
     factor()
-  y <- df1[r_] %>%
+  y <- d[col2] %>%
     as.matrix() %>%
     as.table() %>%
     factor()
-  tauB = KendallTauB(table(x,y), conf.level = 0.95)["tau_b"]
+  tauB <- KendallTauB(table(x, y), conf.level = 0.95)["tau_b"]
   print(tauB)
   tauB_moderate <- rbind(tauB_moderate, list(
-    row1 = r,
-    row2 = r_,
+    col1 = col1,
+    col2 = col2,
     name1 = name1,
     name2 = name2,
     p_value = p_value,

@@ -2,6 +2,7 @@ source("helpers.R")
 
 packages <- c( # List of this script's dependencies
   "readxl",
+  "stringi",
   "writexl",
   "dplyr",
   "tidyr",
@@ -23,7 +24,7 @@ lapply(initial_dataset$F, function(x) { # For each line assign to each column it
   c <- str_split(x, ", ")
   for (s in c("1", "2", "3", "4", "5")) {
     if (!is.na(x)) {
-      if (grepl(x, s, fixed = TRUE)) {
+      if (stri_detect_fixed(x, s, fixed = TRUE)) {
         text <- paste("dataset$F", s, "[", parent.frame()$i[], "]<<-1", sep = "")
         print(text)
         eval(parse(text = text)) # oui
@@ -38,7 +39,7 @@ lapply(initial_dataset$G, function(x) { # For each line assign to each column it
   c <- str_split(x, ", ")
   for (s in c("1", "2", "3", "4")) {
     if (!is.na(x)) {
-      if (grepl(x, s, fixed = TRUE)) {
+      if (stri_detect_fixed(x, s, fixed = TRUE)) {
         text <- paste("dataset$G", s, "[", parent.frame()$i[], "]<<-1", sep = "")
         print(text)
         eval(parse(text = text)) # oui
