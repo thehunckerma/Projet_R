@@ -4,7 +4,6 @@ packages <- c( # List of this script's dependencies
   "readxl",
   "dplyr",
   "questionr",
-  "rlist",
   "psy",
   "data.table",
   "mokken",
@@ -12,16 +11,13 @@ packages <- c( # List of this script's dependencies
 )
 RequirePackages(packages)
 
-
 df1 <- read_excel("data/dataset_clean_1.xlsx")
 
-kendallTauB <- function(x) {
-  KendallTauB(table(factor(x[[1]], ordered = TRUE), factor(x[[2]], ordered = TRUE)), conf.level = 0.95)
-}
 verbosity <- list(
   chi2 = FALSE,
   cramerv = FALSE
 ) # Wether or not to print the tests results in the console
+
 df1_colnames <- colnames(df1) # List of dataframe column names
 counter_ <- 0 # Counts the number Chi-square tests with p-value < 0.05
 counter <- 0 # Counts the total number of the Chi-square tests
@@ -46,13 +42,20 @@ for (row in 1:ncol(df1)) {
       as.table() %>%
       factor()
 
-    if (length(summary(x)) < 2 | row == row_) next
+    if (
+      length(summary(x)) < 2 # Chi-square requires the contingency table to be 2x2
+      | row == row_
+    ) {
+      next
+    }
 
     p_value <- chisq.test(table(x, y), simulate.p.value = TRUE)$p.value # Chi-square test of the selected variables
 
     if (p_value <= 0.05) {
-      print(paste("There is a correlation between", df1_colnames[row], "and", df1_colnames[row_]))
-      writeLines(paste("p-value =", p_value, "\n"))
+      if (verbosity["chi2"] == TRUE) { # Verbosity
+        cat("There is a correlation between", df1_colnames[row], "and", df1_colnames[row_])
+        writeLines("p-value =", p_value, "\n")
+      }
 
       chi2_df <- rbind(chi2_df, list(
         row1 = row,
@@ -65,12 +68,17 @@ for (row in 1:ncol(df1)) {
       counter_ <- counter_ + 1
     }
     counter <- counter + 1
+    cat("\r Performing test n°", counter, " out of ~1620 tests") # Information about the loop
   }
 }
-print(paste("There are", counter_, "correlations out of", counter))
-View(chi2_df)
 
-# Initialize the dataframes that stores data about the variables depending on their cramer's v coeff value
+cat("There are", counter_, "correlations out of", counter)
+
+if (verbosity["chi2"] == TRUE) { # Verbosity
+  View(chi2_df)
+}
+
+# Initialize the dataframes that store data about the variables based on their cramer's v coeff value
 cramerv_df_low <- data.frame(
   row1 = numeric(),
   row2 = numeric(),
@@ -118,45 +126,99 @@ for (row in 1:nrow(chi2_df)) {
     as.table() %>%
     factor()
 
-  if (length(summary(x)) < 2 | length(summary(y)) < 2) next
+  if (length(summary(x)) < 2) next # Cramer's v requires the contingency table to be 2x2 or bigger
 
-# applying the mokken scaling, Conbach alpha test, the Guttman's lambda test, on the dataframe to check data reliability
-# check.reliability(as.data.frame(df1), MS = TRUE, alpha = TRUE, lambda.2 = TRUE, LCRC = FALSE, nclass = nclass.default, irc = FALSE)
+  cramer_v <- suppressWarnings(cramer.v(table(x, y))) # Cramer's v coeff of the selected variables
 
   # Seperate the data depending on the coefficient's value
-  if (c >= 0.5) {
-    print(paste("There is a high correlation between", df1_colnames[r], "and", df1_colnames[r_]))
+  if (cramer_v >= 0.5) {
+    if (verbosity["cramerv"] == TRUE) { # Verbosity
+      cat("There is a high correlation between", df1_colnames[r], "and", df1_colnames[r_])
+    }
     cramerv_df_high <- rbind(cramerv_df_high, list(
       row1 = r,
       row2 = r_,
       name1 = name1,
       name2 = name2,
       p_value = p_value,
-      cramer_v = c
+      cramer_v = cramer_v
     )) # Store the information in the dataframe for later use
-  } else if (c >= 0.3 & c < 0.5) {
-    print(paste("There is a moderate correlation between", df1_colnames[r], "and", df1_colnames[r_]))
+  } else if (cramer_v >= 0.3 & cramer_v < 0.5) {
+    if (verbosity["cramerv"] == TRUE) { # Verbosity
+      cat("There is a moderate correlation between", df1_colnames[r], "and", df1_colnames[r_])
+    }
     cramerv_df_moderate <- rbind(cramerv_df_moderate, list(
       row1 = r,
       row2 = r_,
       name1 = name1,
       name2 = name2,
       p_value = p_value,
-      cramer_v = c
+      cramer_v = cramer_v
     )) # Store the information in the dataframe for later use
-  } else if (c >= 0.1 & c < 0.3) {
-    print(paste("There is a low correlation between", df1_colnames[r], "and", df1_colnames[r_]))
+  } else if (cramer_v >= 0.1 & cramer_v < 0.3) {
+    if (verbosity["cramerv"] == TRUE) { # Verbosity
+      cat("There is a low correlation between", df1_colnames[r], "and", df1_colnames[r_])
+    }
     cramerv_df_low <- rbind(cramerv_df_low, list(
       row1 = r,
       row2 = r_,
       name1 = name1,
       name2 = name2,
       p_value = p_value,
-      cramer_v = c
+      cramer_v = cramer_v
     )) # Store the information in the dataframe for later use
   }
-  writeLines(paste("Cramer's v coeff =", c, "\n"))
+  if (verbosity["cramerv"] == TRUE) { # Verbosity
+    writeLines("Cramer's v coeff =", cramer_v, "\n")
+  }
+  cat("\r Performing test n°", row, "/", nrow(chi2_df)) # Information about the loop
 }
-View(cramerv_df_moderate)
-View(cramerv_df_low)
-View(cramerv_df_high)
+
+if (verbosity["cramerv"] == TRUE) { # Verbosity
+  View(cramerv_df_moderate)
+  View(cramerv_df_low)
+  View(cramerv_df_high)
+}
+
+for (row in 1:nrow(cramerv_df_moderate)) {
+  # print(paste(map[cramerv_df_moderate$name1[row]],"correle moderement avec",map[cramerv_df_moderate$name2[row]])) # Print a formated version of the null hypothesises
+}
+
+tauB_moderate <- data.frame(
+  row1 = numeric(),
+  row2 = numeric(),
+  name1 = character(),
+  name2 = character(),
+  p_value = numeric(),
+  cramer_v = numeric(),
+  tauB = numeric()
+)
+for (row in 1:nrow(cramerv_df_moderate)) {
+  r <- cramerv_df_moderate$row1[row]
+  r_ <- cramerv_df_moderate$row2[row]
+  name1 <- cramerv_df_moderate$name1[row]
+  name2 <- cramerv_df_moderate$name2[row]
+  p_value <- cramerv_df_moderate$p_value[row]
+  cramer_v <- cramerv_df_moderate$cramer_v[row]
+  
+  x <- df1[r] %>%
+    as.matrix() %>%
+    as.table() %>%
+    factor()
+  y <- df1[r_] %>%
+    as.matrix() %>%
+    as.table() %>%
+    factor()
+  tauB = KendallTauB(table(x,y), conf.level = 0.95)["tau_b"]
+  print(tauB)
+  tauB_moderate <- rbind(tauB_moderate, list(
+    row1 = r,
+    row2 = r_,
+    name1 = name1,
+    name2 = name2,
+    p_value = p_value,
+    cramer_v = cramer_v,
+    tauB = tauB
+  )) # Store the information in the dataframe for later use
+}
+View(tauB_moderate)
