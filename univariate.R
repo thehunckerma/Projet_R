@@ -9,9 +9,6 @@ packages <- c( # List of this script's dependencies
 RequirePackages(packages) # if package is installed import it else install it and import it
 
 dataset <- read_excel("data/dataset_clean.xlsx") # Import the dataset
-
-df1 <- read_excel("data/dataset_clean_1.xlsx") # Import the dataset
-
 dataset1 <- read_excel("data/dataset_clean_1.xlsx") # Import the dataset
 
 #Max, min, mediane, mean, 1st and 3rd quantils, mode, variace, square distance, kurtosis, skewness, frequences
