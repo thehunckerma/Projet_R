@@ -53,6 +53,7 @@ sd(dataset$A)
 kurtosis(dataset$A)
 skewness(dataset$A)
 histos[1]
+ggsave("img/0.png",histos[1])
 shapiro.test(dataset$A) 
 
 p_OnlineCourses = nrow(dataset1)/nrow(dataset) # Ratio of people who had online courses 
