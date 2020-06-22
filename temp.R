@@ -34,25 +34,3 @@ alphaCronbach=cronbach(tbl[,1:length(tbl)]) #applying the Conbach alpha test on 
 
 #applying the mokken scaling, Conbach alpha test, the Guttman's lambda test, on the dataframe to check data reliability
 check.reliability(as.data.frame(df1), MS = TRUE, alpha = TRUE, lambda.2 = TRUE, LCRC = FALSE, nclass = nclass.default, irc = FALSE)
-
-
-# ------------------------------------------------------
-
-if (p_value <= 0.05) {
-  if (verbosity["chi2"] == TRUE) { # Verbosity
-    cat("There is a correlation between", d_colnames[row], "and", d_colnames[row_])
-    writeLines("p-value =", p_value, "\n")
-  }
-  
-  chi2_df <- rbind(chi2_df, list(
-    row1 = row,
-    row2 = row_,
-    name1 = d_colnames[row],
-    name2 = d_colnames[row_],
-    p_value = p_value
-  )) # Store the information in the dataframe for later use
-  
-  counter_ <- counter_ + 1
-}
-counter <- counter + 1
-cat("\r Performing test n°", counter, " out of ~1620 tests") # Information about the loop
