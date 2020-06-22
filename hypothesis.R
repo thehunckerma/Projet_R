@@ -7,7 +7,8 @@ packages <- c( # List of this script's dependencies
   "psy",
   "data.table",
   "mokken",
-  "DescTools"
+  "DescTools", # KendallTauB
+  "ltm" # biserial.cor
 )
 RequirePackages(packages)
 
@@ -16,15 +17,14 @@ d_colnames <- colnames(d) # List of dataframe column names
 
 verbosity <- list(
   continuous_ordinal = TRUE,
-  continuous_dichotomous= TRUE,
+  continuous_dichotomous = TRUE,
   chi2 = FALSE,
   cramerv = FALSE
 ) # Wether or not to print the tests results in the console
 
 # Split data by variable type --------------------------------------------------------
 
-Age <- d$A # The age is the only continuous variable
-d_dichotomous <- cbind( # Dichotomic variables ( yes/no questions )
+d_dichotomous <- cbind( # Dichotomous variables ( yes/no questions )
   B = d$B,
   d[, 5:13], # F and G
   L1 = d$L1,
@@ -55,38 +55,35 @@ d_ordinal <- d[, !(names(d) %in% c( # Ordinal variables ( Likert Scale )
   "G4"
 ))]
 
-# Experimental -----------------------------------------------------------------------
+Age <- d$A # The age is the only continuous variable
 
-# Continuous-ordinal --------------------------------------------
+# *************** Continuous-ordinal *******************
 
 continuous_ordinal_df <- data.frame(
   col1 = numeric(),
   col2 = numeric(),
   name1 = character(),
   name2 = character(),
-  p_value = numeric(),
   tau_b = numeric()
 ) # Initialize the dataframe that stores data (including Tau-b) variables that got a p-value < 0.05
 
 colnames_ordinal <- colnames(d_ordinal)
 
-for (col in 1:ncol(d_ordinal)) {
-  # Convert to ordinal variable
-
-  x <- d[col] %>%
+for (col in 1:ncol(d_ordinal)) { # Iterate over the ordinal variables dataframe 
+  x_ordered <- d_ordinal[col] %>%
     as.matrix() %>%
     as.table() %>%
-    factor() # Convert each row to factor
+    factor(
+      ordered = TRUE,
+      levels = c(1, 2, 3, 4, 5)
+    ) # Convert each row to an ordered factor with 5 levels
 
-  x_ordered <- d[col] %>%
-    as.matrix() %>%
-    as.table() %>%
-    factor(ordered = TRUE, levels = c(1, 2, 3, 4, 5)) # Convert each row to an ordered factor with 5 levels
+  tau_b <- KendallTauB(
+    table(Age, x_ordered), # Correlate Age with the other ordinal variables
+    conf.level = 0.95
+  )["tau_b"] # Kendall's Tau-b coeff to measure the direction and strength of the association
 
-  p_value <- chisq.test(table(Age, x), simulate.p.value = TRUE)$p.value # Chi-square test to filter the uncorrelated variables
-  tau_b <- KendallTauB(table(Age, x_ordered), conf.level = 0.95)["tau_b"] # Kendall's Tau-b coeff to measure the direction and strength of the association
-
-  if (p_value <= 0.05 && !is.nan(tau_b)) { # Check if the null hypothesis is true
+  if (!is.nan(tau_b) && abs(tau_b) >= 0.2) { # Check if tau_b is a number
     if (verbosity["continuous_ordinal"] == TRUE) { # Verbosity
       if (tau_b > 0) {
         sign <- "positive"
@@ -96,7 +93,7 @@ for (col in 1:ncol(d_ordinal)) {
       cat(
         "There is a", sign, "correlation between",
         d_colnames[1], "and", colnames_ordinal[col], "\n",
-        "p-value =", p_value, "tau-b =", tau_b, "\n\n"
+        "tau-b =", tau_b, "\n\n"
       )
     }
     continuous_ordinal_df <- rbind(continuous_ordinal_df, list(
@@ -104,55 +101,109 @@ for (col in 1:ncol(d_ordinal)) {
       col2 = col,
       name1 = d_colnames[1],
       name2 = colnames_ordinal[col],
-      p_value = p_value,
       tau_b = tau_b
     )) # Store the information in the dataframe
   }
 }
 
-# Continuous-dichotomous  --------------------------------------------
+if (verbosity["continuous_ordinal"] == TRUE) { # Verbosity
+  print(continuous_ordinal_df)
+  cat("\n")
+  for (row in 1:nrow(continuous_ordinal_df)) {
+    if (continuous_ordinal_df$tau_b[row] > 0) {
+      sign <- "positivement"
+    } else {
+      sign <- "negativement"
+    }
+    paste(
+      map[continuous_ordinal_df$name1[row]],
+      "correle", sign, "avec",
+      map[continuous_ordinal_df$name2[row]]
+    ) %>%
+      print() # Print a formated version of conclusion
+  }
+}
+
+# ******** Continuous-dichotomous *************  --------------------------------------------
 
 continuous_dichotomous_df <- data.frame(
   col1 = numeric(),
   col2 = numeric(),
   name1 = character(),
   name2 = character(),
-  p_value = numeric()
-) # Initialize the dataframe that stores data (including Tau-b) variables that got a p-value < 0.05
+  biserial = numeric()
+) # Initialize the dataframe that stores data
 
-colnames_ordinal <- colnames(d_dichotomous)
+colnames_dichotomous <- colnames(d_dichotomous)
 
-for (col in 1:ncol(d_ordinal)) {
+for (col in 1:ncol(d_dichotomous)) { # Loop over the dichotomous variables dataframe
   # Convert to ordinal variable
 
-  x <- d[col] %>%
+  x <- d_dichotomous[col] %>%
     as.matrix() %>%
     as.table() %>%
     factor() # Convert each row to factor
 
-  p_value <- chisq.test(table(Age, x), simulate.p.value = TRUE)$p.value # Chi-square test to filter the uncorrelated variables
-
-  if (p_value <= 0.05) { # Check if the null hypothesis is true
+  biserial <- biserial.cor(Age, x) # Mesure the Point-Biserial correlation coefficient
+  
+  if (!is.nan(biserial) & abs(biserial) >= 0.2) { # Check if the biserial coeff is a number
     if (verbosity["continuous_dichotomous"] == TRUE) { # Verbosity
+      if (biserial > 0) {
+        sign <- "positive"
+      } else {
+        sign <- "negative"
+      }
       cat(
-        "There is a correlation between",
-        d_colnames[1], "and", colnames_ordinal[col], "\n",
-        "p-value =", p_value, "\n\n"
+        "There is a", sign, "correlation between",
+        d_colnames[1], "and", colnames_dichotomous[col], "\n",
+        "biserial =", biserial, "\n\n"
       )
     }
     continuous_dichotomous_df <- rbind(continuous_dichotomous_df, list(
       col1 = 1,
       col2 = col,
       name1 = d_colnames[1],
-      name2 = colnames_ordinal[col],
-      p_value = p_value
+      name2 = colnames_dichotomous[col],
+      biserial = biserial
     )) # Store the information in the dataframe
   }
 }
 
+if (verbosity["continuous_dichotomous"] == TRUE) { # Verbosity
+  print(continuous_dichotomous_df)
+  cat("\n")
+  for (row in 1:nrow(continuous_dichotomous_df)) {
+    if (continuous_dichotomous_df$biserial[row] > 0) {
+      sign <- "positivement"
+    } else {
+      sign <- "negativement"
+    }
+    paste(
+      map[continuous_dichotomous_df$name1[row]],
+      "correle", sign, "avec",
+      map[continuous_dichotomous_df$name2[row]]
+    ) %>%
+      print() # Print a formated version of conclusion
+  }
+}
 
-
-# End of Eperimental ------------------------------------------------------------
+# Eperimental ------------------------------------------------------------
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 counter_ <- 0 # Counts the number Chi-square tests with p-value < 0.05
 counter <- 0 # Counts the total number of the Chi-square tests
@@ -315,9 +366,6 @@ if (verbosity["cramerv"] == TRUE) { # Verbosity
   View(cramerv_df_high)
 }
 
-for (row in 1:nrow(cramerv_df_moderate)) {
-  # print(paste(map[cramerv_df_moderate$name1[row]],"correle moderement avec",map[cramerv_df_moderate$name2[row]])) # Print a formated version of the null hypothesises
-}
 
 tauB_moderate <- data.frame(
   col1 = numeric(),
