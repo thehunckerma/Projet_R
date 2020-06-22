@@ -2,11 +2,12 @@ source("helpers.R")
 
 packages <- c( # List of this script's dependencies
   "readxl",
-  "Hmisc",
+  "DescTools", # Mode
   "moments", # kurtosis, skewness
   "ggplot2", #use ggplot geom_histogram
   "grid", # grid & gridExtra => grid.arrange
-  "gridExtra", #
+  "gridExtra",
+  "rlist", # list.filter
   "purrr" # use set_names
 )
 RequirePackages(packages) # if package is installed import it else install it and import it
@@ -30,10 +31,10 @@ d_ordinal <- dataset1[!(names(dataset1) %in% c( # Ordinal variables ( Likert Sca
   "G1",
   "G2",
   "G3",
-  "G4",
+  "G4"
 ))]
 T=names(dataset)
-T=set_names(x)
+T=set_names(T)
 
 histos=c(lapply(T[2:5],function(x) {
       ggplot(dataset[2:5], aes(x = .data[[x]]) ) + geom_histogram(color="darkblue",fill="white",binwidth = NULL)
