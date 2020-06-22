@@ -29,11 +29,11 @@ messages=unlist(lapply(names(c(map1[1],map1[3:length(map1)])),function(x){
    p_value=wilcox.test(unlist(men[x]),unlist(women[x]),paired=TRUE)$p.value
    if(p_value>=0.05){
     paste(
-        "There is no significant difference the", map1[x], "between men and women"
+        "There is no significant difference in the", map1[x], "between men and women"
     )
    }else{
     paste(
-        "There is a significant difference the", map1[x], "between men and women"
+        "There is a significant difference in the", map1[x], "between men and women"
     )
    }
 }))
