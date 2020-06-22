@@ -510,7 +510,9 @@ for (col in 1:n) { # Loop over the dichotomous variables dataframe
     }
   }
 }
+
 dichotomous_dichotomous_df <- dichotomous_dichotomous_df[order(abs(dichotomous_dichotomous_df$phi_coeff)), ] # Sort results by coeff
+
 if (verbosity["nominal_nominal"] == TRUE) { # Verbosity
   print(dichotomous_dichotomous_df)
   cat("\n")
