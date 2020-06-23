@@ -2,9 +2,7 @@ source("helpers.R")
 
 packages <- c( # List of this script's dependencies7
   "readxl",
-  "dplyr",
-  "REdaS", # KMOS
-  "parameters"
+  "REdaS" # KMOS
 )
 
 RequirePackages(packages)
@@ -99,6 +97,36 @@ plot(fa.none$loadings[,1], fa.none$loadings[,4], xlim = c(-0.5, 1), ylim = c(-0.
      xlab = "Factor 1", ylab = "Factor 4", main = "Varimax Rotation")
 abline(h = 0, v = 0)
 text(fa$loadings[,1]-0.08, 
+     fa$loadings[,4]+0.08,
+     colnames(d_ordinal),
+     col="blue")
+     
+# Let's the loadings with varimax rotation for Factors 2 and 3
+fa.none <- factanal(x = od.data, n.obs = 70, factors = 4, rotation = "varimax")
+plot(fa.none$loadings[,2], fa.none$loadings[,3], xlim = c(-0.5, 1), ylim = c(-0.5, 1),
+     xlab = "Factor 2", ylab = "Factor 3", main = "Varimax Rotation")
+abline(h = 0, v = 0)
+text(fa$loadings[,2]-0.08, 
+     fa$loadings[,3]+0.08,
+     colnames(d_ordinal),
+     col="blue")
+     
+# Let's the loadings with varimax rotation for Factors 2 and 4
+fa.none <- factanal(x = od.data, n.obs = 70, factors = 4, rotation = "varimax")
+plot(fa.none$loadings[,2], fa.none$loadings[,4], xlim = c(-0.5, 1), ylim = c(-0.5, 1),
+     xlab = "Factor 2", ylab = "Factor 4", main = "Varimax Rotation")
+abline(h = 0, v = 0)
+text(fa$loadings[,2]-0.08, 
+     fa$loadings[,4]+0.08,
+     colnames(d_ordinal),
+     col="blue")
+
+# Let's the loadings with varimax rotation for Factors 3 and 4
+fa.none <- factanal(x = od.data, n.obs = 70, factors = 4, rotation = "varimax")
+plot(fa.none$loadings[,3], fa.none$loadings[,4], xlim = c(-0.5, 1), ylim = c(-0.5, 1),
+     xlab = "Factor 3", ylab = "Factor 4", main = "Varimax Rotation")
+abline(h = 0, v = 0)
+text(fa$loadings[,3]-0.08, 
      fa$loadings[,4]+0.08,
      colnames(d_ordinal),
      col="blue")

@@ -30,10 +30,10 @@ alphaOrd=cronbach(as.data.table(d_ordinal)[,1:length(as.data.table(d_ordinal))])
 
 if(alphaOrd$alpha>0.7){
   cat(
-    "alpha is equal to",alphaOrd$alpha,", so the ordinal scale are reliable for early stages of research."
+    "alpha is equal to",alphaOrd$alpha,", so the likert scale is reliable for early stages of research."
   )
 }else{
   cat(
-    "alpha is equal to",alphaOrd$alpha,", so the items are not reliable"
+    "alpha is equal to",alphaOrd$alpha,", so the likert scale is reliable"
   )
 }
