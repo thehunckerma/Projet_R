@@ -4,7 +4,7 @@ RequirePackages <- function(packages) { # if package is installed import it else
   lapply(packages, function(x) {
     if (!require(x, character.only = TRUE)) {
       install.packages(x, dependencies = TRUE)
-      library(x, character.only = TRUE)
+      suppressWarnings(library(x, character.only = TRUE))
     }
   })
 }
