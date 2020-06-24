@@ -22,7 +22,7 @@ InvertScale <- function(x) { # Return the variable with inversed Likert scale
 # Sampling Adequacy ------------------------------------------------------------------
 
 d_ordinal <- as.data.frame(d[, !(names(d) %in% c( # Ordinal variables ( Likert Scale )
-  "B", "C", "D", "H", "J", "L1", "L2",
+  "A", "B", "C", "D", "H", "J", "L1", "L2",
   "F1", "F2", "F3", "F4", "F5",
   "G1", "G2", "G3", "G4"
 ))])
@@ -60,16 +60,6 @@ apply(fa$loadings^2,1,sum) # Communality
 
 resid <- round(fa$correlation - fa$loadings%*% t(fa$loadings) + diag(fa$uniquenesses),6) #  The residual matrix
 print(resid)
-
-# Let's plot the unrotated model for Factors 1 and 2
-fa.none <- factanal(x = od.data, n.obs = 70, factors = 4, rotation = "none")
-plot(fa.none$loadings[,1], fa.none$loadings[,2], xlim = c(-0.5, 1), ylim = c(-0.5, 1),
-     xlab = "Factor 1", ylab = "Factor 2", main = "No Rotation")
-abline(h = 0, v = 0)
-text(fa.none$loadings[,1]-0.08, 
-     fa.none$loadings[,2]+0.08,
-     colnames(d_ordinal),
-     col="blue")
 
 # Let's the loadings with varimax rotation for Factors 1 and 2
 fa.none <- factanal(x = od.data, n.obs = 70, factors = 4, rotation = "varimax")
@@ -130,3 +120,4 @@ text(fa$loadings[,3]-0.08,
      fa$loadings[,4]+0.08,
      colnames(d_ordinal),
      col="blue")
+

@@ -33,19 +33,20 @@ per_1 <- num_1 / t # ENSAK
 per_2 <- num_2 / t # ENCGK
 per_3 <- num_3 / t # Faculty
 
-# Chi-squared test for representiveness in terms of students distribution by school/faculty:
+# Chi-squared test for representativeness in terms of students distribution by school/faculty:
 chisq.test(
   table(school),
   p = c(per_1, per_2, per_3),
   simulate.p.value = TRUE
 ) # p-value << 0.05 therefore the sample is not representative of the population
 
-# Chi-squared test for representiveness in terms of students distribution by gender:
+# Chi-squared test for representativeness in terms of students distribution by gender:
 chisq.test(
   table(gender),
   p = c(1 / 2, 1 / 2),
   simulate.p.value = TRUE # We know that the number of females is almost equal to the number of males
 ) # p-value > 0.05 therefore the sample is representative of the population
 
+# Percentage of obsservations by departement
 s <- summary(school)
 round(s / sum(s) * 100, 2)

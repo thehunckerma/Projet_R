@@ -51,6 +51,7 @@ lapply(initial_dataset$G, function(x) { # For each line assign to each column it
 })
 # Numerical conversion -------------------------------------------------------------------
 dataset <- mutate_all(dataset, function(x) as.numeric(as.character(x))) # Convert everything to numeric
+
 # Multivariate Outlier Detection ---------------------------------------------------------
 
 age_year <- data.frame(dataset$A, dataset$C) # Dataframe of Age and Year
@@ -72,9 +73,10 @@ write_xlsx(dataset, "data/dataset_clean.xlsx") # Export the dataset for later us
 # Filter the lines based on the value of E ( which is 1 if the person have taken distance courses and 2 otherwise )
 
 # Exclude the E column as it becomes useless after the split
-df1 <- select(dataset[dataset$E == 1, ], -E)
+df1 <- cbind(dataset[dataset$E == 1,1:4],dataset[dataset$E == 1,6:length(dataset)])
 write_xlsx(df1, "data/dataset_clean_1.xlsx") # Export the dataset for later use
 
 # Exclude all the columns except A, B, C, D because they contain NA values
 df2 <- as.data.frame(dataset[dataset$E == 2, 1:4])
 write_xlsx(df2, "data/dataset_clean_2.xlsx") # Export the dataset for later use
+
