@@ -69,8 +69,8 @@ normalVarCount=length(list.filter(normalityTest,normalityTest[[.i]]$p.value > 0.
 cat("in ", length(d_ordinal), " variables, there are ", normalVarCount," with no difference between their evolution and the normal distribution")
 
 # saving plot grids as png in img folder
-ggsave("img/1.png",do.call(grid.arrange, histos[2:13]))
-ggsave("img/2.png",do.call(grid.arrange, histos[14:25]))
-ggsave("img/3.png",do.call(grid.arrange, histos[26:37]))
-ggsave("img/4.png",do.call(grid.arrange, histos[38:49]))
-ggsave("img/5.png",do.call(grid.arrange, histos[50:60]))
+do.call(grid.arrange, histos[2:13])
+do.call(grid.arrange, histos[14:25])
+do.call(grid.arrange, histos[26:37])
+do.call(grid.arrange, histos[38:49])
+do.call(grid.arrange, histos[50:60])
